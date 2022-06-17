@@ -2,5 +2,17 @@
     "name": "EWG Lookup",
     "description": "Adds EWG search functionality to any site.",
     "version": "1.0",
-    "manifest_version": 3
-  }
+    "manifest_version": 3,
+    "permissions": [
+        "contextMenus",
+        "storage"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "icons": {
+        "16": "ewg_logo_128.png",
+        "48": "ewg_logo_48.png",
+        "128": "ewg_logo_16.png"
+    }
+}
