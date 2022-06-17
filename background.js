@@ -9,22 +9,36 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 });
 
-const searchEWG = async (info, tab) => {
-    console.log('searching for ' + info.selectionText);
-
+const searchUrl = async (info, tab, url, source) => {
     const searchWords = info.selectionText.split(' ').map(word => encodeURIComponent(word));
     const searchString = searchWords.join('+');
-    const searchUrl = `${EWG_SEARCH_URL}${searchString}`;
+    const searchUrl = `${url}${searchString}`;
     console.log(searchUrl);
 
-    const response = await fetch(searchUrl);``
+    const response = await fetch(searchUrl);
     const data = await response.text();
 
-    chrome.tabs.sendMessage(tab.id, { data }, (response) => {
-        if (response.numProductsFound === 0) {
-            console.log('need more products');
-        }
+    return new Promise(resolve => {
+        chrome.tabs.sendMessage(tab.id, { data, source }, (response) => {
+            if (response.numProductsFound === 0) {
+                resolve(false);
+            } else {
+                resolve(true);
+            }
+        });
     });
 };
 
-chrome.contextMenus.onClicked.addListener(searchEWG);
+const initSearch = async (info, tab) => {
+    console.log('searching for ' + info.selectionText);
+
+    const resultSuccess = searchUrl(info, tab, EWG_SEARCH_URL, 'EWG');
+
+    if (resultSuccess) {
+        console.log('success');
+    } else {
+        console.log('failure');
+    }
+};
+
+chrome.contextMenus.onClicked.addListener(initSearch);
