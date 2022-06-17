@@ -20,12 +20,10 @@ const searchEWG = async (info, tab) => {
     const response = await fetch(searchUrl);``
     const data = await response.text();
 
-    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, { data }, (response) => {
-            if (response.numProductsFound === 0) {
-                console.log('need more products');
-            }
-        });
+    chrome.tabs.sendMessage(tab.id, { data }, (response) => {
+        if (response.numProductsFound === 0) {
+            console.log('need more products');
+        }
     });
 };
 
