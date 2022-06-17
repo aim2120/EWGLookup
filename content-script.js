@@ -12,6 +12,7 @@ const handleEWGResults = html => {
 };
 
 const handleGoogleResults = html => {
+    console.log(html);
     return 0;
 };
 
