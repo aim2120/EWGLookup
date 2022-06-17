@@ -5,11 +5,25 @@
     "manifest_version": 3,
     "permissions": [
         "contextMenus",
-        "storage"
+        "storage",
+        "tabs"
+    ],
+    "host_permissions": [
+        "https://www.ewg.org/*"
     ],
     "background": {
         "service_worker": "background.js"
     },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content-script.js"
+            ]
+        }
+    ],
     "icons": {
         "16": "ewg_logo_128.png",
         "48": "ewg_logo_48.png",
