@@ -1,0 +1,77 @@
+.ewg-popup-container {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    background-color: rgb(212, 212, 212);
+    font-family: niveau-grotesk, sans-serif;
+    font-size: 12pt;
+    z-index: 2000;
+
+    .ewg-popup-content {
+        height: 100%;
+        overflow: scroll;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .product-tile {
+        width: 200px;
+        padding: 8px;
+        margin: 10px;
+        background-color: #fff;
+        align-self: stretch;
+    }
+
+    a {
+        text-decoration: none;
+        color: #111;
+    }
+
+    img {
+        margin: 5px;
+    }
+
+    .text-wrapper {
+        font-weight: bolder;
+        margin-bottom: 5px;
+
+        .product-company {
+            font-style: italic;
+        }
+    }
+
+    .product-image {
+        max-width: 160px;
+        min-height: 160px;
+    }
+
+    .product-score {
+        display: flex;
+        justify-content: space-between;
+
+        .product-score-img {
+            width: 50px;
+        }
+    }
+
+    .ewg-popup-dragger {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 2px;
+        background-color: #111;
+
+        &:hover {
+            cursor: move;
+            /* fallback if grab cursor is unsupported */
+            cursor: grab;
+        }
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+}
