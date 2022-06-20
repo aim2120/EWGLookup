@@ -1,5 +1,7 @@
+import { JSDOM } from './jsdom.js';
+
 const EWG_SEARCH_URL = 'https://www.ewg.org/skindeep/search/?utf8=%E2%9C%93&search=';
-const GOOGLE_SEARCH_EWG_URL = 'https://www.google.com/search?q=ewg+';
+const GOOGLE_SEARCH_EWG_URL = 'https://www.google.com/search?q=site%3Aewg.org%2Fskindeep%2Fbrowse+';
 
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
@@ -9,47 +11,73 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 });
 
-const searchUrl = async (info, tab, url, source) => {
-    const searchWords = info.selectionText.split(' ').map(word => encodeURIComponent(word));
-    const searchString = searchWords.join('+');
-    let searchUrl = `${url}${searchString}`;
+const searchEWGDOM = dom => {
+    const { document } = dom.window;
+    const productNodes = [...document.getElementsByClassName('product-tile')];
 
-    if (source === 'Google') {
-        searchUrl += '&btnI';
+    const products = productNodes.map(node => {
+        return node.outerHTML;
+    });
 
-    }
+    return {
+        productsLength: products.length,
+        products,
+    };
+};
 
-    console.log(searchUrl);
+const getEWGUrlFromGoogleDOM = dom => {
+    const { document } = dom.window;
+    const resultNodes = document.getElementsByClassName('g');
+    return resultNodes[0].getElementsByTagName('a')[0].href;
+};
 
-    const response = await fetch(searchUrl);
+const getDOM = async url => {
+    const response = await fetch(url);
     const data = await response.text();
+    const dom = new JSDOM(data);
 
     return new Promise(resolve => {
-        chrome.tabs.sendMessage(tab.id, { data, source }, (response) => {
-            if (response.numProductsFound === 0) {
-                resolve(false);
-            } else {
-                resolve(true);
-            }
-        });
+        resolve(dom);
+    });
+};
+
+const getSearchURL = (selectionText, url) => {
+    const searchWords = selectionText.split(' ').map(word => encodeURIComponent(word));
+    const searchString = searchWords.join('+');
+    let searchUrl = `${url}${searchString}`;
+    return searchUrl;
+};
+
+const sendMessageToContentScript = (results, tab) => {
+    console.log('success');
+
+    chrome.tabs.sendMessage(tab.id, { results }, (response) => {
+        console.log(response);
     });
 };
 
 const initSearch = async (info, tab) => {
     console.log('searching for ' + info.selectionText);
 
-    let resultSuccess = await searchUrl(info, tab, EWG_SEARCH_URL, 'EWG');
+    const searchUrlEWG = getSearchURL(info.selectionText, EWG_SEARCH_URL);
+    const domEWG = await getDOM(searchUrlEWG);
+    const resultsEWG = searchEWGDOM(domEWG);
 
-    if (resultSuccess) {
-        console.log('success');
+    if (resultsEWG.productsLength > 0) {
+        sendMessageToContentScript(resultsEWG, tab);
         return;
     }
 
     console.log('failure -- trying Google');
-    resultSuccess = await searchUrl(info, tab, GOOGLE_SEARCH_EWG_URL, 'Google');
 
-    if (resultSuccess) {
-        console.log('success');
+    const searchUrlGoogle = getSearchURL(info.selectionText, GOOGLE_SEARCH_EWG_URL);
+    const domGoogle = await getDOM(searchUrlGoogle);
+    const urlEWGFromGoogle = getEWGUrlFromGoogleDOM(domGoogle);
+    const domEWGFromGoogle = await getDOM(urlEWGFromGoogle);
+    const resultsEWGFromGoogle = searchEWGDOM(domEWGFromGoogle);
+
+    if (resultsEWGFromGoogle.productsLength > 0) {
+        sendMessageToContentScript(resultsEWGFromGoogle, tab);
         return;
     }
 
