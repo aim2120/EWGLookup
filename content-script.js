@@ -2,8 +2,9 @@ const popupContainer = document.createElement('div');
 const popupDragger = document.createElement('div');
 
 popupContainer.className = 'ewg-popup-container';
-popupContainer.style.top = `${window.innerHeight}px`;
 popupDragger.className = 'ewg-popup-dragger';
+
+popupContainer.style.top = `${window.innerHeight}px`;
 
 popupContainer.appendChild(popupDragger);
 document.body.appendChild(popupContainer);
@@ -16,7 +17,7 @@ const setEventListeners = () => {
         isMovingEWGBorder = true;
     });
 
-    document.body.addEventListener('mouseup', e => {
+    popupDragger.addEventListener('mouseup', e => {
         console.log('mouseup');
         isMovingEWGBorder = false;
     });
@@ -24,7 +25,7 @@ const setEventListeners = () => {
     document.body.addEventListener('mousemove', e => {
         if (isMovingEWGBorder) {
             console.log('moving');
-            popupContainer.style.top = e.offsetY + 'px';
+            popupContainer.style.top = e.clientY + 'px';
         }
     });
 };
@@ -47,11 +48,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const popupContentElement = document.getElementsByClassName('ewg-popup-content');
 
     if (popupContentElement.length > 0) {
-        popupContentElement[0].innerHTML = popup.innerHTML;
+        popupContentElement[0].innerHTML = popupContent.innerHTML;
     } else {
         popupContainer.appendChild(popupContent);
         popupContainer.style.top = `${window.innerHeight - 360}px`;
-        //setEventListeners();
+        setEventListeners();
     }
 
     sendResponse('we got it!');
