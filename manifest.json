@@ -21,10 +21,14 @@
                 "<all_urls>"
             ],
             "js": ["content-script.js"],
-            "css" : ["popup.css"],
+            "css" : ["content.css"],
             "run_at": "document_idle"
         }
     ],
+    "action": {
+        "default_title": "EWG Product Lookup",
+        "default_popup": "popup.html"
+    },
     "icons": {
         "16": "ewg_logo_128.png",
         "48": "ewg_logo_48.png",

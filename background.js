@@ -7,7 +7,7 @@ chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "SearchEWG",
         contexts: ['selection'],
-        title: 'Find EWG rating for "%s"',
+        title: 'Search EWG for "%s"',
     });
 });
 

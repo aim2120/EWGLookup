@@ -1,0 +1,104 @@
+.ewg-popup-container {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    background-color: rgb(212, 212, 212);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12pt;
+    color: #111;
+    z-index: 2000;
+
+    .ewg-popup-dragger {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 10px;
+
+        &:hover {
+            cursor: move;
+            /* fallback if grab cursor is unsupported */
+            cursor: grab;
+            background-color: rgb(134, 134, 134);
+        }
+
+        &:active {
+            cursor: grabbing;
+            background-color: rgb(134, 134, 134);
+        }
+    }
+
+    .ewg-popup-content {
+        position: absolute;
+        top: 10px;
+        height: 100%;
+        width: 100%;
+        overflow: scroll;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .product-tile {
+        width: 200px;
+        padding: 8px;
+        margin: 10px;
+        background-color: #fff;
+        align-self: stretch;
+    }
+
+    .no-results {
+        width: 100%;
+        padding: 8px;
+        text-align: center;
+    }
+
+    a {
+        text-decoration: none;
+        color: #111;
+    }
+
+    img {
+        margin: 5px;
+    }
+
+    .text-wrapper {
+        font-weight: bolder;
+        margin-bottom: 5px;
+
+        .product-company {
+            font-style: italic;
+        }
+    }
+
+    .product-image {
+        max-width: 160px;
+        min-height: 160px;
+        max-height: 240px;
+    }
+
+    .product-score {
+        display: flex;
+        justify-content: space-between;
+
+        .product-score-img {
+            width: 50px;
+        }
+    }
+
+    .ewg-popup-close-button {
+        position: absolute;
+        top: -30px;
+        right: 20px;
+        width: 30px;
+        height: 30px;
+        background-color: rgb(212, 212, 212);
+        border-radius: 5px 5px 0 0;
+        padding: 5px;
+        
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
