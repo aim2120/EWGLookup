@@ -41,6 +41,7 @@
     }
 
     .product-tile {
+        position: relative;
         width: 200px;
         padding: 8px;
         margin: 10px;
@@ -84,6 +85,17 @@
 
         .product-score-img {
             width: 50px;
+            margin-right: 10px;
+        }
+    }
+
+    .favorite-product {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+
+        &:hover {
+            cursor: pointer;
         }
     }
 

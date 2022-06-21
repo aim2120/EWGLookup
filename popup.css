@@ -6,3 +6,47 @@ body {
   font-size: 12pt;
   color: #111;
 }
+
+.saved-products {
+  display: flex;
+}
+
+.product-tile {
+  padding: 8px;
+  margin: 10px;
+  background-color: #fff;
+  align-self: stretch;
+  display: flex;
+}
+
+a {
+  text-decoration: none;
+  color: #111;
+}
+
+img {
+  margin: 5px;
+}
+
+.text-wrapper {
+  font-weight: bolder;
+  margin-bottom: 5px;
+}
+.text-wrapper .product-company {
+  font-style: italic;
+}
+
+.product-image {
+  max-width: 60px;
+  min-height: 60px;
+  max-height: 140px;
+}
+
+.product-score {
+  display: flex;
+  justify-content: flex-start;
+}
+.product-score .product-score-img {
+  width: 25px;
+  margin-right: 10px;
+}

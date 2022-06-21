@@ -37,6 +37,7 @@
   justify-content: space-around;
 }
 .ewg-popup-container .product-tile {
+  position: relative;
   width: 200px;
   padding: 8px;
   margin: 10px;
@@ -73,6 +74,15 @@
 }
 .ewg-popup-container .product-score .product-score-img {
   width: 50px;
+  margin-right: 10px;
+}
+.ewg-popup-container .favorite-product {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+.ewg-popup-container .favorite-product:hover {
+  cursor: pointer;
 }
 .ewg-popup-container .ewg-popup-close-button {
   position: absolute;
