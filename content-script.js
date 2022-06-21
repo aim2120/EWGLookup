@@ -10,7 +10,7 @@ const closeButtonSVG = `
 `;
 const heartSVG = `
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" height="39" width="39" viewBox="-4 1 40 40">
-  <path d="M 0 20 v -20 h 20 a 10 10 90 0 1 0 20 a 10 10 90 0 1 -20 0 z" stroke="rgb(17,17,17)" stroke-width="3" fill="red" transform="rotate(225,16,16)"></path>
+  <path d="M 0 20 v -20 h 20 a 10 10 90 0 1 0 20 a 10 10 90 0 1 -20 0 z" stroke="rgb(17,17,17)" stroke-width="3" fill="none" transform="rotate(225,16,16)"></path>
 </svg>
 `;
 
@@ -76,10 +76,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     favoriteElement.className = 'favorite-product';
     favoriteElement.innerHTML = heartSVG;
 
-    const addFavorite = (id, value) => {
-        chrome.storage.sync.set({ [id]: value }, () => {
-            console.log(id + ' is set to ' + value);
-        });
+    const addFavorite = (id, element) => {
+        element.getElementsByTagName('path')[0].style.fill = 'red';
+        chrome.storage.sync.set({ [id]: element.outerHTML }, () => {});
     };
 
     const productElementContainer = document.createElement('div'); // to temporarily hold the product html
@@ -90,7 +89,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const productID = getProductId(productElement);
 
         const favoriteElementCopy = favoriteElement.cloneNode(true);
-        favoriteElementCopy.addEventListener('click', e => addFavorite(productID, productElement.outerHTML));
+        favoriteElementCopy.addEventListener('click', e => addFavorite(productID, productElement));
         productElement.appendChild(favoriteElementCopy);
         popupContent.appendChild(productElement);
     }

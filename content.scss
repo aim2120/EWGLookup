@@ -96,6 +96,10 @@
 
         &:hover {
             cursor: pointer;
+
+            path {
+                fill: red;
+            }
         }
     }
 

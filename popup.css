@@ -53,3 +53,6 @@ img {
 .favorite-product:hover {
   cursor: pointer;
 }
+.favorite-product:hover path {
+  fill: none;
+}

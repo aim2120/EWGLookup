@@ -84,6 +84,9 @@
 .ewg-popup-container .favorite-product:hover {
   cursor: pointer;
 }
+.ewg-popup-container .favorite-product:hover path {
+  fill: red;
+}
 .ewg-popup-container .ewg-popup-close-button {
   position: absolute;
   top: -30px;
