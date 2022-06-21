@@ -7,10 +7,6 @@ body {
     color: #111;
 }
 
-.saved-products {
-    display: flex;
-}
-
 .product-tile {
     padding: 8px;
     margin: 10px;
@@ -50,5 +46,13 @@ img {
     .product-score-img {
         width: 25px;
         margin-right: 10px;
+    }
+}
+
+.favorite-product {
+    height: fit-content;
+
+    &:hover {
+        cursor: pointer;
     }
 }

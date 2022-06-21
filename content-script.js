@@ -82,8 +82,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         });
     };
 
+    const productElementContainer = document.createElement('div'); // to temporarily hold the product html
+
     for (let product of products) {
-        const productElementContainer = document.createElement('div');
         productElementContainer.innerHTML = product;
         const productElement = productElementContainer.children[0];
         const productID = getProductId(productElement);
