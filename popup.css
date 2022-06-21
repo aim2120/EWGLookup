@@ -6,6 +6,7 @@
   background-color: rgb(212, 212, 212);
   font-family: niveau-grotesk, sans-serif;
   font-size: 12pt;
+  color: #111;
   z-index: 2000;
 }
 .ewg-popup-container .ewg-popup-dragger {
@@ -29,6 +30,7 @@
   position: absolute;
   top: 10px;
   height: 100%;
+  width: 100%;
   overflow: scroll;
   display: flex;
   flex-wrap: wrap;
@@ -40,6 +42,11 @@
   margin: 10px;
   background-color: #fff;
   align-self: stretch;
+}
+.ewg-popup-container .no-results {
+  width: 100%;
+  padding: 8px;
+  text-align: center;
 }
 .ewg-popup-container a {
   text-decoration: none;

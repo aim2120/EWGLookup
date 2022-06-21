@@ -25,19 +25,39 @@ const searchEWGDOM = dom => {
     };
 };
 
+// returns undefined if no search results on page
 const getEWGUrlFromGoogleDOM = dom => {
     const { document } = dom.window;
     const resultNodes = document.getElementsByClassName('g');
-    return resultNodes[0].getElementsByTagName('a')[0].href;
+
+    const url = resultNodes[0]?.getElementsByTagName('a')[0]?.href;
+
+    if (url) {
+        return url;
+    }
+
+    throw new Error(`Unable to find any Google results for ${dom.window.location}`);
 };
 
 const getDOM = async url => {
-    const response = await fetch(url);
-    const data = await response.text();
-    const dom = new JSDOM(data);
+    let response, data, dom, errorMessage;
 
-    return new Promise(resolve => {
-        resolve(dom);
+    try {
+        response = await fetch(url);
+        data = await response.text();
+        dom = new JSDOM(data, {
+            url,
+        });
+    } catch (e) {
+        errorMessage = `Unable to fetch ${url}: ${e}`
+    }
+
+    return new Promise((resolve, reject) => {
+        if (dom !== undefined) {
+            resolve(dom);
+        } else {
+            reject(new Error(errorMessage))
+        }
     });
 };
 
@@ -49,8 +69,6 @@ const getSearchURL = (selectionText, url) => {
 };
 
 const sendMessageToContentScript = (results, tab) => {
-    console.log('success');
-
     chrome.tabs.sendMessage(tab.id, { results }, (response) => {
         console.log(response);
     });
@@ -59,29 +77,44 @@ const sendMessageToContentScript = (results, tab) => {
 const initSearch = async (info, tab) => {
     console.log('searching for ' + info.selectionText);
 
-    const searchUrlEWG = getSearchURL(info.selectionText, EWG_SEARCH_URL);
-    const domEWG = await getDOM(searchUrlEWG);
-    const resultsEWG = searchEWGDOM(domEWG);
+    try {
+        const searchUrlEWG = getSearchURL(info.selectionText, EWG_SEARCH_URL);
+        const domEWG = await getDOM(searchUrlEWG);
+        const resultsEWG = searchEWGDOM(domEWG);
 
-    if (resultsEWG.productsLength > 0) {
-        sendMessageToContentScript(resultsEWG, tab);
-        return;
+        if (resultsEWG.productsLength > 0) {
+            sendMessageToContentScript(resultsEWG, tab);
+            return;
+        }
+    } catch (e) {
+        console.error(e);
     }
 
     console.log('failure -- trying Google');
 
-    const searchUrlGoogle = getSearchURL(info.selectionText, GOOGLE_SEARCH_EWG_URL);
-    const domGoogle = await getDOM(searchUrlGoogle);
-    const urlEWGFromGoogle = getEWGUrlFromGoogleDOM(domGoogle);
-    const domEWGFromGoogle = await getDOM(urlEWGFromGoogle);
-    const resultsEWGFromGoogle = searchEWGDOM(domEWGFromGoogle);
+    try {
+        const searchUrlGoogle = getSearchURL(info.selectionText, GOOGLE_SEARCH_EWG_URL);
+        const domGoogle = await getDOM(searchUrlGoogle);
+        const urlEWGFromGoogle = getEWGUrlFromGoogleDOM(domGoogle);
+        const domEWGFromGoogle = await getDOM(urlEWGFromGoogle);
+        const resultsEWGFromGoogle = searchEWGDOM(domEWGFromGoogle);
 
-    if (resultsEWGFromGoogle.productsLength > 0) {
-        sendMessageToContentScript(resultsEWGFromGoogle, tab);
-        return;
+        if (resultsEWGFromGoogle.productsLength > 0) {
+            sendMessageToContentScript(resultsEWGFromGoogle, tab);
+            return;
+        }
+    } catch (e) {
+        console.error(e);
     }
 
     console.log('failure -- nothing left to try');
+
+    const emptyResults = {
+        productsLength: 0,
+        products: [],
+    };
+
+    sendMessageToContentScript(emptyResults, tab);
 };
 
 chrome.contextMenus.onClicked.addListener(initSearch);

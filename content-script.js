@@ -69,7 +69,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     if (products.length === 0) {
-        popupContent.innerHTML += '<h1>Couldn\'t find anything for that, sorry...</h1>';
+        popupContent.innerHTML += '<div class="no-results">Couldn\'t find anything for that, sorry...</div>';
     }
 
     const popupContentElement = document.getElementsByClassName('ewg-popup-content');
