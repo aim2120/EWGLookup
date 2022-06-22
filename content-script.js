@@ -91,8 +91,9 @@ const populateSearchResults = async results => {
         productElementContainer.innerHTML = product;
         const productElement = productElementContainer.children[0];
         const productID = getProductId(productElement);
-
         const favoriteElementCopy = favoriteElement.cloneNode(true);
+
+        productElement.classList.add(productID);
 
         if (productID in savedProducts) {
             favoriteElementCopy.src = chrome.runtime.getURL('/images/heart_red.svg');
@@ -130,11 +131,20 @@ const populateSearchResults = async results => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const { results } = message;
-
     populateSearchResults(results).then(returnMessage => sendResponse(returnMessage));
-
     return true;
 });
 
+const updateContent = (changes) => {
+    for (let [productID, {oldValue, newValue}] of Object.entries(changes)) {
+        const productElement = document.getElementsByClassName(productID)[0];
+
+        if (productElement && newValue === undefined) { // the product was removed
+            productElement.getElementsByClassName('favorite-product')[0].src = chrome.runtime.getURL('/images/heart_empty.svg');
+        }
+    }
+};
+
+chrome.storage.onChanged.addListener(updateContent);
 
 console.log('This is the extensions!!!!!!!!!');
