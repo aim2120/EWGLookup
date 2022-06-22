@@ -19,6 +19,17 @@ const getProductElementFromHTML = html => {
     return containerElement.children[0];
 };
 
+const makeLinksWork = element => {
+    const anchors = element.getElementsByTagName('a');
+    for (let anchor of anchors) {
+        anchor.addEventListener('click', e => {
+            chrome.tabs.update({
+                url: anchor.href,
+            });
+        });
+    }
+};
+
 const updatePopup = (changes) => {
     const savedProductsElement = document.getElementsByClassName('saved-products')[0];
 
@@ -32,6 +43,7 @@ const updatePopup = (changes) => {
             if (newValue) {
                 const productElement = getProductElementFromHTML(newValue);
                 changeProductToFavorite(productElement, productID);
+                makeLinksWork(productElement);
                 savedProductsElement.appendChild(productElement);
             }
         }
@@ -48,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const productElement = getProductElementFromHTML(html);
             changeProductToFavorite(productElement, productID);
+            makeLinksWork(productElement);
             savedProductsElement.appendChild(productElement);
         }
     });
