@@ -149,13 +149,14 @@ const populateSearchResults = async results => {
     const popupContentElement = document.getElementsByClassName('ewg-popup-content');
 
     if (popupContentElement.length > 0) {
-        popupContentElement[0].innerHTML = popupContent.innerHTML;
+        popupContentElement[0].remove();
     } else {
-        popupContainer.appendChild(popupContent);
         popupContainer.style.top = `${window.innerHeight - 360}px`;
         popupCloseButton.style.display = 'block';
         setEventListeners();
     }
+
+    popupContainer.appendChild(popupContent);
 
     return new Promise(resolve => {
         resolve('content received results');
