@@ -89,10 +89,12 @@
         }
     }
 
-    .favorite-product {
+    .favorite-unfavorite-container {
         position: absolute;
         top: 5px;
         right: 5px;
+
+        height: fit-content;
 
         &:hover {
             cursor: pointer;

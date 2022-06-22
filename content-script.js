@@ -1,6 +1,7 @@
 const COPY = {
     noResultsText: 'Couldn\'t find anything for that, sorry...',
     favoriteButtonText: 'Add product to Saved Products',
+    unfavoriteButtonText: 'Remove product from Saved Products',
     closeButtonText: 'Close window',
 };
 
@@ -69,40 +70,74 @@ const getSavedProducts = async () => {
     });
 };
 
-const populateSearchResults = async results => {
-    const savedProducts = await getSavedProducts();
-    const { products } = results;
-    const popupContent = document.createElement('div');
-    popupContent.className = 'ewg-popup-content';
+const removeFavorite = id => {
+    chrome.storage.sync.remove(id);
+};
+
+const addFavorite = (id, element) => {
+    chrome.storage.sync.set({ [id]: element.outerHTML }, () => { });
+};
+
+const changeProductToFavorite = (productElement, productID) => {
+    const favoriteUnfavoriteContainerElement = productElement.getElementsByClassName('favorite-unfavorite-container')[0];
+    favoriteUnfavoriteContainerElement.children[1].src = chrome.runtime.getURL('/images/heart_red.svg');
+    favoriteUnfavoriteContainerElement.addEventListener('click', e => removeFavorite(productID));
+    favoriteUnfavoriteContainerElement.classList.add('favorited');
+};
+
+const changeProductToUnfavorite = (productElement, productID) => {
+    const favoriteUnfavoriteContainerElement = productElement.getElementsByClassName('favorite-unfavorite-container')[0];
+    favoriteUnfavoriteContainerElement.children[1].src = chrome.runtime.getURL('/images/heart_empty.svg');
+    favoriteUnfavoriteContainerElement.addEventListener('click', e => addFavorite(productID, productElement));
+    favoriteUnfavoriteContainerElement.classList.remove('favorited');
+};
+
+const createFavoriteUnfavoriteElement = () => {
+    const unfavoriteElement = document.createElement('img');
+    unfavoriteElement.alt = COPY.unfavoriteButtonText;
+    unfavoriteElement.title = COPY.unfavoriteButtonText;
+    unfavoriteElement.className = 'unfavorite-product';
+    unfavoriteElement.src = chrome.runtime.getURL('/images/closeButton.svg');
 
     const favoriteElement = document.createElement('img');
     favoriteElement.alt = COPY.favoriteButtonText;
     favoriteElement.title = COPY.favoriteButtonText;
     favoriteElement.className = 'favorite-product';
 
-    const addFavorite = (id, element) => {
-        element.getElementsByClassName('favorite-product')[0].src = chrome.runtime.getURL('/images/heart_red.svg');
-        chrome.storage.sync.set({ [id]: element.outerHTML }, () => { });
-    };
+    const favoriteUnfavoriteContainerElement = document.createElement('div');
+    favoriteUnfavoriteContainerElement.className = 'favorite-unfavorite-container';
+
+    favoriteUnfavoriteContainerElement.appendChild(unfavoriteElement);
+    favoriteUnfavoriteContainerElement.appendChild(favoriteElement);
+
+    return favoriteUnfavoriteContainerElement;
+};
+
+const populateSearchResults = async results => {
+    const savedProducts = await getSavedProducts();
+    const { products } = results;
+    const popupContent = document.createElement('div');
+    popupContent.className = 'ewg-popup-content';
 
     const productElementContainer = document.createElement('div'); // to temporarily hold the product html
+
+    const favoriteUnfavoriteContainerElement = createFavoriteUnfavoriteElement();
 
     for (let product of products) {
         productElementContainer.innerHTML = product;
         const productElement = productElementContainer.children[0];
         const productID = getProductId(productElement);
-        const favoriteElementCopy = favoriteElement.cloneNode(true);
+        const favoriteUnfavoriteContainerElementCopy = favoriteUnfavoriteContainerElement.cloneNode(true);
 
+        productElement.appendChild(favoriteUnfavoriteContainerElementCopy);
         productElement.classList.add(productID);
 
         if (productID in savedProducts) {
-            favoriteElementCopy.src = chrome.runtime.getURL('/images/heart_red.svg');
+            changeProductToFavorite(productElement, productID);
         } else {
-            favoriteElementCopy.src = chrome.runtime.getURL('/images/heart_empty.svg');
+            changeProductToUnfavorite(productElement, productID);
         }
 
-        favoriteElementCopy.addEventListener('click', e => addFavorite(productID, productElement));
-        productElement.appendChild(favoriteElementCopy);
         popupContent.appendChild(productElement);
     }
 
@@ -139,8 +174,12 @@ const updateContent = (changes) => {
     for (let [productID, {oldValue, newValue}] of Object.entries(changes)) {
         const productElement = document.getElementsByClassName(productID)[0];
 
-        if (productElement && newValue === undefined) { // the product was removed
-            productElement.getElementsByClassName('favorite-product')[0].src = chrome.runtime.getURL('/images/heart_empty.svg');
+        if (productElement) {
+            if (newValue) { // the product is saved
+                changeProductToFavorite(productElement, productID);
+            } else { // the product was removed
+                changeProductToUnfavorite(productElement, productID);
+            }
         }
     }
 };

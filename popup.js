@@ -1,25 +1,26 @@
 const COPY = {
-    favoriteButtonText: 'Remove product from Saved Products',
+    unfavoriteButtonText: 'Remove product from Saved Products',
 };
 
 const removeFavorite = id => {
     chrome.storage.sync.remove(id);
 };
 
-const addProductHTMLToPage = (productID, html, savedProductsElement, containerElement) => {
+const changeProductToFavorite = (productElement, productID) => {
+    const favoriteUnfavoriteContainerElement = productElement.getElementsByClassName('favorite-unfavorite-container')[0];
+    favoriteUnfavoriteContainerElement.children[1].src = chrome.runtime.getURL('/images/heart_red.svg');
+    favoriteUnfavoriteContainerElement.addEventListener('click', e => removeFavorite(productID));
+    favoriteUnfavoriteContainerElement.classList.add('favorited');
+};
+
+const getProductElementFromHTML = html => {
+    const containerElement = document.createElement('div'); // to temporarily hold the product html
     containerElement.innerHTML = html;
-    const productElement = containerElement.children[0];
-    const favoriteElement = productElement.getElementsByClassName('favorite-product')[0];
-    favoriteElement.alt = COPY.favoriteButtonText;
-    favoriteElement.title = COPY.favoriteButtonText;
-    favoriteElement.addEventListener('click', e => removeFavorite(productID));
-    productElement.classList.add(productID);
-    savedProductsElement.appendChild(productElement);
+    return containerElement.children[0];
 };
 
 const updatePopup = (changes) => {
     const savedProductsElement = document.getElementsByClassName('saved-products')[0];
-    const productElementContainer = document.createElement('div'); // to temporarily hold the product html
 
     for (let [productID, { oldValue, newValue }] of Object.entries(changes)) {
         if (oldValue !== newValue) {
@@ -29,7 +30,9 @@ const updatePopup = (changes) => {
                 });
             }
             if (newValue) {
-                addProductHTMLToPage(productID, newValue, savedProductsElement, productElementContainer);
+                const productElement = getProductElementFromHTML(newValue);
+                changeProductToFavorite(productElement, productID);
+                savedProductsElement.appendChild(productElement);
             }
         }
     }
@@ -39,11 +42,13 @@ chrome.storage.onChanged.addListener(updatePopup);
 
 document.addEventListener('DOMContentLoaded', () => {
     const savedProductsElement = document.getElementsByClassName('saved-products')[0];
-    const productElementContainer = document.createElement('div'); // to temporarily hold the product html
 
     chrome.storage.sync.get(products => {
         for (let [productID, html] of Object.entries(products)) {
-            addProductHTMLToPage(productID, html, savedProductsElement, productElementContainer);
+
+            const productElement = getProductElementFromHTML(html);
+            changeProductToFavorite(productElement, productID);
+            savedProductsElement.appendChild(productElement);
         }
     });
 });

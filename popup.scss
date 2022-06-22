@@ -14,15 +14,16 @@ body {
     align-self: stretch;
     display: flex;
     justify-content: space-between;
+
 }
 
 a {
     text-decoration: none;
     color: #111;
-}
 
-img {
-    margin: 5px;
+    img {
+        margin: 5px;
+    }
 }
 
 .text-wrapper {
@@ -51,9 +52,33 @@ img {
 }
 
 .favorite-product {
+    opacity: 1;
+}
+
+.unfavorite-product {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    opacity: 0;
+}
+
+.favorite-unfavorite-container {
+    position: relative;
+    width: fit-content;
     height: fit-content;
 
     &:hover {
         cursor: pointer;
+
+        &.favorited {
+            .favorite-product {
+                opacity: 0;
+            }
+
+            .unfavorite-product {
+                opacity: 1;
+            }
+
+        }
     }
 }

@@ -76,12 +76,13 @@
   width: 50px;
   margin-right: 10px;
 }
-.ewg-popup-container .favorite-product {
+.ewg-popup-container .favorite-unfavorite-container {
   position: absolute;
   top: 5px;
   right: 5px;
+  height: fit-content;
 }
-.ewg-popup-container .favorite-product:hover {
+.ewg-popup-container .favorite-unfavorite-container:hover {
   cursor: pointer;
 }
 .ewg-popup-container .ewg-popup-close-button {
