@@ -39,6 +39,7 @@
 .ewg-popup-container .product-tile {
   position: relative;
   width: 200px;
+  height: fit-content;
   padding: 8px;
   margin: 10px;
   background-color: #fff;
@@ -46,6 +47,9 @@
 }
 .ewg-popup-container .product-tile img {
   margin: 5px;
+}
+.ewg-popup-container .product-tile:last-child {
+  margin-bottom: 20px;
 }
 .ewg-popup-container .no-results {
   width: 100%;

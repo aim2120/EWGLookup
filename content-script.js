@@ -55,7 +55,9 @@ const setEventListeners = () => {
     });
 };
 
-const getProductId = (productElement) => {
+// TODO: some products have the same name because of truncation...
+// NEED FIX
+const getProductID = (productElement) => {
     const productCompany = productElement.getElementsByClassName('product-company')[0].textContent.trim();
     const productName = productElement.getElementsByClassName('product-name')[0].textContent.trim();
     const productID = `${productCompany.replaceAll(' ', '_')}-${productName.replaceAll(' ', '_')}`;
@@ -128,7 +130,8 @@ const populateSearchResults = async results => {
     for (let product of products) {
         productElementContainer.innerHTML = product;
         const productElement = productElementContainer.children[0];
-        const productID = getProductId(productElement);
+
+        const productID = getProductID(productElement);
         const favoriteUnfavoriteContainerElementCopy = favoriteUnfavoriteContainerElement.cloneNode(true);
 
         productElement.appendChild(favoriteUnfavoriteContainerElementCopy);
