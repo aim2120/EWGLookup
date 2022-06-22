@@ -114,6 +114,7 @@
             &.favorited {
                 .favorite-product {
                     opacity: 0;
+                    pointer-events: none;
                 }
 
                 .unfavorite-product {

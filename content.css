@@ -97,6 +97,7 @@
 }
 .ewg-popup-container .favorite-unfavorite-container:hover.favorited .favorite-product {
   opacity: 0;
+  pointer-events: none;
 }
 .ewg-popup-container .favorite-unfavorite-container:hover.favorited .unfavorite-product {
   opacity: 1;
