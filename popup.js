@@ -1,3 +1,7 @@
+const COPY = {
+    favoriteButtonText: 'Remove product from Saved Products',
+};
+
 const removeFavorite = id => {
     chrome.storage.sync.remove(id);
 };
@@ -5,7 +9,10 @@ const removeFavorite = id => {
 const addProductHTMLToPage = (productID, html, savedProductsElement, containerElement) => {
     containerElement.innerHTML = html;
     const productElement = containerElement.children[0];
-    productElement.getElementsByClassName('favorite-product')[0].addEventListener('click', e => removeFavorite(productID));
+    const favoriteElement = productElement.getElementsByClassName('favorite-product')[0];
+    favoriteElement.alt = COPY.favoriteButtonText;
+    favoriteElement.title = COPY.favoriteButtonText;
+    favoriteElement.addEventListener('click', e => removeFavorite(productID));
     productElement.classList.add(productID);
     savedProductsElement.appendChild(productElement);
 };

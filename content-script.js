@@ -61,23 +61,28 @@ const getProductId = (productElement) => {
     return productID;
 };
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    const { results } = message;
-    const { products } = results;
+const getSavedProducts = async () => {
+    return new Promise(resolve => {
+        chrome.storage.sync.get(null, dict => {
+            resolve(dict);
+        });
+    });
+};
 
+const populateSearchResults = async results => {
+    const savedProducts = await getSavedProducts();
+    const { products } = results;
     const popupContent = document.createElement('div');
     popupContent.className = 'ewg-popup-content';
 
-
     const favoriteElement = document.createElement('img');
-    favoriteElement.src = chrome.runtime.getURL('/images/heart_empty.svg');
     favoriteElement.alt = COPY.favoriteButtonText;
-    favoriteElement.title = COPY.favoriteButtonText; 
+    favoriteElement.title = COPY.favoriteButtonText;
     favoriteElement.className = 'favorite-product';
 
     const addFavorite = (id, element) => {
         element.getElementsByClassName('favorite-product')[0].src = chrome.runtime.getURL('/images/heart_red.svg');
-        chrome.storage.sync.set({ [id]: element.outerHTML }, () => {});
+        chrome.storage.sync.set({ [id]: element.outerHTML }, () => { });
     };
 
     const productElementContainer = document.createElement('div'); // to temporarily hold the product html
@@ -88,6 +93,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const productID = getProductId(productElement);
 
         const favoriteElementCopy = favoriteElement.cloneNode(true);
+
+        if (productID in savedProducts) {
+            favoriteElementCopy.src = chrome.runtime.getURL('/images/heart_red.svg');
+        } else {
+            favoriteElementCopy.src = chrome.runtime.getURL('/images/heart_empty.svg');
+        }
+
         favoriteElementCopy.addEventListener('click', e => addFavorite(productID, productElement));
         productElement.appendChild(favoriteElementCopy);
         popupContent.appendChild(productElement);
@@ -111,7 +123,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         setEventListeners();
     }
 
-    sendResponse('we got it!');
+    return new Promise(resolve => {
+        resolve('we got it');
+    });
+};
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    const { results } = message;
+
+    populateSearchResults(results).then(returnMessage => sendResponse(returnMessage));
+
+    return true;
 });
 
 
