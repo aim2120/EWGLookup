@@ -82,7 +82,9 @@ const changeProductToFavorite = (productElement, productID) => {
     const favoriteUnfavoriteContainerElement = productElement.getElementsByClassName('favorite-unfavorite-container')[0];
     favoriteUnfavoriteContainerElement.children[1].src = chrome.runtime.getURL('/images/heart_red.svg');
     favoriteUnfavoriteContainerElement.addEventListener('click', e => removeFavorite(productID));
-    favoriteUnfavoriteContainerElement.classList.add('favorited');
+    window.setTimeout(() => {
+        favoriteUnfavoriteContainerElement.classList.add('favorited');
+    }, 1000);
 };
 
 const changeProductToUnfavorite = (productElement, productID) => {
