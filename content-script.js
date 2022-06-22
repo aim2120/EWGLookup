@@ -27,18 +27,15 @@ const setEventListeners = () => {
     let isMovingEWGBorder = false;
 
     popupDragger.addEventListener('mousedown', e => {
-        console.log('mousedown');
         isMovingEWGBorder = true;
     });
 
     popupDragger.addEventListener('mouseup', e => {
-        console.log('mouseup');
         isMovingEWGBorder = false;
     });
 
     document.body.addEventListener('mousemove', e => {
         if (isMovingEWGBorder) {
-            console.log('moving');
             popupContainer.style.top = e.clientY + 'px';
         }
     });
@@ -161,7 +158,7 @@ const populateSearchResults = async results => {
     }
 
     return new Promise(resolve => {
-        resolve('we got it');
+        resolve('content received results');
     });
 };
 
@@ -186,5 +183,3 @@ const updateContent = (changes) => {
 };
 
 chrome.storage.onChanged.addListener(updateContent);
-
-console.log('This is the extensions!!!!!!!!!');

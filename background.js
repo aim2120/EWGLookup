@@ -69,6 +69,7 @@ const getSearchURL = (selectionText, url) => {
 };
 
 const sendMessageToContentScript = (results, tab) => {
+    console.log('success, sending to tab');
     chrome.tabs.sendMessage(tab.id, { results }, (response) => {
         console.log(response);
     });
