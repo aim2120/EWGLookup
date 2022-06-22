@@ -55,12 +55,8 @@ const setEventListeners = () => {
     });
 };
 
-// TODO: some products have the same name because of truncation...
-// NEED FIX
 const getProductID = (productElement) => {
-    const productCompany = productElement.getElementsByClassName('product-company')[0].textContent.trim();
-    const productName = productElement.getElementsByClassName('product-name')[0].textContent.trim();
-    const productID = `${productCompany.replaceAll(' ', '_')}-${productName.replaceAll(' ', '_')}`;
+    const productID = productElement.getElementsByTagName('a')[0].href;
     return productID;
 };
 
