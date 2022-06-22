@@ -44,6 +44,9 @@
   background-color: #fff;
   align-self: stretch;
 }
+.ewg-popup-container .product-tile img {
+  margin: 5px;
+}
 .ewg-popup-container .no-results {
   width: 100%;
   padding: 8px;
@@ -52,9 +55,6 @@
 .ewg-popup-container a {
   text-decoration: none;
   color: #111;
-}
-.ewg-popup-container img {
-  margin: 5px;
 }
 .ewg-popup-container .text-wrapper {
   font-weight: bolder;
@@ -83,9 +83,6 @@
 }
 .ewg-popup-container .favorite-product:hover {
   cursor: pointer;
-}
-.ewg-popup-container .favorite-product:hover path {
-  fill: red;
 }
 .ewg-popup-container .ewg-popup-close-button {
   position: absolute;

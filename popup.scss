@@ -13,6 +13,7 @@ body {
     background-color: #fff;
     align-self: stretch;
     display: flex;
+    justify-content: space-between;
 }
 
 a {
@@ -54,9 +55,5 @@ img {
 
     &:hover {
         cursor: pointer;
-
-        path {
-            fill: none;
-        }
     }
 }

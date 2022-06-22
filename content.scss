@@ -47,6 +47,10 @@
         margin: 10px;
         background-color: #fff;
         align-self: stretch;
+
+        img {
+            margin: 5px;
+        }
     }
 
     .no-results {
@@ -58,10 +62,6 @@
     a {
         text-decoration: none;
         color: #111;
-    }
-
-    img {
-        margin: 5px;
     }
 
     .text-wrapper {
@@ -96,10 +96,6 @@
 
         &:hover {
             cursor: pointer;
-
-            path {
-                fill: red;
-            }
         }
     }
 

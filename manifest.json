@@ -29,6 +29,12 @@
         "default_title": "EWG Product Lookup",
         "default_popup": "popup.html"
     },
+    "web_accessible_resources": [
+        {
+            "resources": [ "/images/*" ],
+            "matches": [ "<all_urls>" ]
+        }
+    ],
     "icons": {
         "16": "ewg_logo_128.png",
         "48": "ewg_logo_48.png",
