@@ -10,7 +10,8 @@
         "tabs"
     ],
     "host_permissions": [
-        "https://www.ewg.org/*"
+        "https://www.ewg.org/*",
+        "https://www.google.com/*"
     ],
     "background": {
         "service_worker": "background.js",
