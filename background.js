@@ -5,9 +5,9 @@ const GOOGLE_SEARCH_EWG_URL = 'https://www.google.com/search?q=site%3Aewg.org%2F
 
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
-        id: "SearchEWG",
+        id: "ProductSearch",
         contexts: ['selection'],
-        title: 'Search EWG for "%s"',
+        title: 'Search EWG™ for "%s"',
     });
 });
 

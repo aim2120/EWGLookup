@@ -1,7 +1,7 @@
 {
-    "name": "EWG Product Lookup",
+    "name": "Product Safety Lookup",
     "version": "0.1.0",
-    "description": "Lookup and save EWG product listings from any webpage. Select text and right-click to lookup products.",
+    "description": "Lookup and save EWG™ product ratings from any webpage. Select text and right-click to lookup products.",
     "author": "Annalise Mariottini",
     "manifest_version": 3,
     "permissions": [
@@ -28,7 +28,7 @@
         }
     ],
     "action": {
-        "default_title": "EWG Product Lookup",
+        "default_title": "Product Safety Lookup - Saved Products",
         "default_popup": "popup.html"
     },
     "web_accessible_resources": [
@@ -38,8 +38,8 @@
         }
     ],
     "icons": {
-        "16": "ewg_logo_128.png",
-        "48": "ewg_logo_48.png",
-        "128": "ewg_logo_16.png"
+        "16": "logo-128.png",
+        "48": "logo-48.png",
+        "128": "logo-16.png"
     }
 }
