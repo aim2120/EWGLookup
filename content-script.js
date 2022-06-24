@@ -21,7 +21,6 @@ popupCloseButton.style.display = 'none';
 
 popupContainer.appendChild(popupDragger);
 popupContainer.appendChild(popupCloseButton);
-document.body.appendChild(popupContainer);
 
 const setEventListeners = () => {
     let isMovingEWGBorder = false;
@@ -41,13 +40,15 @@ const setEventListeners = () => {
     });
 
     popupCloseButton.addEventListener('click', e => {
-        popupContainer.style.top = `${window.innerHeight}px`;
-        popupCloseButton.style.display = 'none';
+        const popupContentInDoc = document.getElementsByClassName('ewg-popup-content');
+        const popupContainerInDoc = document.getElementsByClassName('ewg-popup-container');
 
-        const popupContentElement = document.getElementsByClassName('ewg-popup-content');
+        if (popupContainerInDoc.length > 0) {
+            popupContentInDoc[0].remove();
+        }
 
-        if (popupContentElement.length > 0) {
-            popupContainer.removeChild(popupContentElement[0]);
+        if (popupContainerInDoc.length > 0) {
+            popupContainerInDoc[0].remove();
         }
     });
 };
@@ -165,6 +166,11 @@ const populateSearchResults = async results => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const { results } = message;
+
+    if (document.getElementsByClassName('ewg-popup-container').length === 0) {
+        document.body.appendChild(popupContainer);
+    }
+
     populateSearchResults(results).then(returnMessage => sendResponse(returnMessage));
     return true;
 });
