@@ -1,6 +1,6 @@
 {
     "name": "Product Safety Lookup",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Lookup and save EWG™ product ratings from any webpage. Select text and right-click to lookup products.",
     "author": "Annalise Mariottini",
     "manifest_version": 3,
